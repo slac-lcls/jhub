@@ -2,6 +2,7 @@ import pwd
 import json
 import shlex
 import signal
+import shutil
 from jupyterhub.spawner import Spawner
 from jupyterhub.utils import random_port
 from traitlets import (Integer, Unicode)
@@ -11,7 +12,7 @@ from tornado.gen import Task, Return, coroutine
 class SSHSpawner(Spawner):
     pid = Integer(0)
     hostname = Unicode('')
-    sudospawner_path = Unicode('sudospawner')
+    sudospawner_path = Unicode(shutil.which('sudospawner'))
 
     def load_state(self, state):
         super(SSHSpawner, self).load_state(state)
@@ -46,7 +47,7 @@ class SSHSpawner(Spawner):
 
     @coroutine
     def run_mediator(self, action, **kwargs):
-        cmd = 'sudo -u {user} {exec}'.format(self.user.name, self.sudospawner_path)
+        cmd = 'sudo -u {user} {exec}'.format(user=self.user.name, exec=self.sudospawner_path)
         proc = Subprocess(shlex.split(cmd),
                           stdin=Subprocess.STREAM,
                           stdout=Subprocess.STREAM,
