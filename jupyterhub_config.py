@@ -15,10 +15,11 @@ c.Spawner.ip = '0.0.0.0'
 
 c.Authenticator.admin_users = set(['mshankar', 'weninc', 'wilko'])
 
+# cull time is 2 days
 c.JupyterHub.services = [
     {
         'name': 'cull-idle',
         'admin': True,
-        'command': 'cull_idle_servers --timeout=600'.split(),
+        'command': 'cull_idle_servers --timeout=172800'.split(),
     }
 ]
