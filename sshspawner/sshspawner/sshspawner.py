@@ -12,7 +12,8 @@ from tornado.gen import Task, Return, coroutine
 class SSHSpawner(Spawner):
     pid = Integer(0)
     hostname = Unicode('')
-    sudospawner_path = Unicode(shutil.which('sudospawner'))
+    sudospawner_path = Unicode('/reg/g/psdm/sw/jupyterhub/psjhub/jhub/sshspawner/scripts/sudospawner')
+    #shutil.which('sudospawner'))
 
     def load_state(self, state):
         super(SSHSpawner, self).load_state(state)
@@ -47,12 +48,11 @@ class SSHSpawner(Spawner):
 
     @coroutine
     def run_mediator(self, action, **kwargs):
-        cmd = 'sudo -u {user} {exec}'.format(user=self.user.name, exec=self.sudospawner_path)
+        cmd = 'sudo -u {user} -nH {exec}'.format(user=self.user.name, exec=self.sudospawner_path)
         proc = Subprocess(shlex.split(cmd),
                           stdin=Subprocess.STREAM,
                           stdout=Subprocess.STREAM,
                           stderr=Subprocess.STREAM)
-
         kwargs['action'] = action
         yield proc.stdin.write(json.dumps(kwargs).encode('utf8'))
         proc.stdin.close()
@@ -69,10 +69,10 @@ class SSHSpawner(Spawner):
         self.port = random_port()
         result, error = yield self.run_mediator('spawn', user=self.user.name,
                                       args=self.get_args(), env=self.get_env())
+        
+        if error:
+            self.log.info('Error in spawning juptyterhub-singleuser\n', error)
 
-        print('start')
-        print('res', result)
-        print('err', error)
         lines = result.splitlines()
         self.hostname = lines[0]
         self.pid = int(lines[1])
@@ -91,16 +91,19 @@ class SSHSpawner(Spawner):
                               pid=self.pid, signal=0)
         if error:
             self.log.info('Server died')
-            print(result, error)
-            self.log.info(stderr.decode())
+            self.log.info(result, error)
             self.clear_state()
             return 0
         else:
             return None
 
+
     @coroutine
     def stop(self, now=False):
         self.log.info('Stop server')
+        status = yield self.poll()
+        if status is not None:
+            return
         result, error = yield self.run_mediator('kill',
                               user=self.user.name, hostname=self.hostname,
                               pid=self.pid, signal=signal.SIGKILL)

@@ -14,3 +14,11 @@ c.JupyterHub.spawner_class = 'sshspawner.SSHSpawner'
 c.Spawner.ip = '0.0.0.0'
 
 c.Authenticator.admin_users = set(['mshankar', 'weninc', 'wilko'])
+
+c.JupyterHub.services = [
+    {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': 'python cull_idle_servers.py --timeout=600'.split(),
+    }
+]
