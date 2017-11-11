@@ -4,5 +4,5 @@ setup(
     name='sshspawner',
     version='0.1',
     packages=['sshspawner'],
-    scripts = ['scripts/sudospawner'],
+    scripts = ['scripts/sudospawner', 'scripts/cull_idle_servers']
 )
