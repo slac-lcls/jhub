@@ -5,7 +5,8 @@ import signal
 import shutil
 from jupyterhub.spawner import Spawner
 from jupyterhub.utils import random_port
-from traitlets import (Integer, Unicode)
+from traitlets import (Integer, Unicode)i
+from tornado import web
 from tornado.process import Subprocess
 from tornado.gen import Task, Return, coroutine
 
@@ -72,6 +73,8 @@ class SSHSpawner(Spawner):
         
         if error:
             self.log.info('Error in spawning juptyterhub-singleuser\n', error)
+            if 'Permission denied' in error:
+                raise web.HTTPError(511) 
 
         lines = result.splitlines()
         self.hostname = lines[0]

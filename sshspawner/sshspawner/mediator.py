@@ -16,7 +16,7 @@ def run(cmd):
 
 
 def kill(user, hostname, pid, signal):
-    cmd = 'ssh {user}@{host} kill -s {signal} {pid}'.format(
+    cmd = 'ssh -o PasswordAuthentication=no {user}@{host} kill -s {signal} {pid}'.format(
            user=user, host=hostname, pid=pid, signal=signal)
     run(cmd)
 
