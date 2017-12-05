@@ -25,31 +25,15 @@ def spawn(singleuser, user, args, env):
     if 'PYTHONPATH' in env:
         env.pop('PYTHONPATH')
         log.app_log.info('PYTHONPATH env not allowed for security reasons')
-
-    cmd = ['ssh  {user}@psana '.format(user=user)]
+    log_file = os.path.expanduser('~/.jhub.log')
+    cmd = ['ssh -o PasswordAuthentication=no {user}@psana '.format(user=user)]
     cmd.extend(['export %s=%s;' %item for item in env.items()])
     cmd += ['hostname;', singleuser]
     #cmd.extend([' %s ' %a for a in args])
     cmd += args
-    cmd += [' > /dev/null 2>&1 & pid=$!; echo $pid']
+    cmd += [' > {log_file} 2>&1 & pid=$!; echo $pid'.format(log_file=log_file)]
     cmd = ' '.join(cmd)
     run(cmd)
-    '''
-    #print('cmd', cmd)
-    r, w = os.pipe()
-    # parent
-    if os.fork():
-        os.close(w)
-        r = os.fdopen(r)
-        sys.stdout.write(r.read())
-    # child
-    else:
-        os.setpgrp()
-        os.close(r)
-        completed = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        with os.fdopen(w, 'w') as fh:
-            fh.write(completed.stdout.decode('utf8', 'replace'))
-    '''
 
 def main():
     kwargs = json.load(sys.stdin)
