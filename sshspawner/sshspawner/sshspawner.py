@@ -5,7 +5,7 @@ import signal
 import shutil
 from jupyterhub.spawner import Spawner
 from jupyterhub.utils import random_port
-from traitlets import (Integer, Unicode)i
+from traitlets import (Integer, Unicode)
 from tornado import web
 from tornado.process import Subprocess
 from tornado.gen import Task, Return, coroutine
