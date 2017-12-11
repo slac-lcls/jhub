@@ -1,4 +1,4 @@
-#!/reg/neh/home/weninc/.conda/envs/jhub/bin/python
+#!/usr/bin/env python
 
 from sshspawner import mediator
 mediator.main()

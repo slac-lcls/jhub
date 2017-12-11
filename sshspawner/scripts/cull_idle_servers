@@ -1,4 +1,5 @@
-#!/reg/neh/home/weninc/.conda/envs/jhub/bin/python
+
+#!/usr/bin/env python
 
 """script to monitor and cull idle single-user servers
 
