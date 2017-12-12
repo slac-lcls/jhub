@@ -15,21 +15,6 @@ def run(cmd):
     sys.stderr.flush()
 
 
-def generate_ssh_key(user):
-    key_file = os.path.expanduser('~/.ssh/id_rsa3')
-    if os.path.isfile(key_file):
-        sys.stderr.write('Key already exists')
-        sys.stderr.flush()
-        return
-    cmd = 'ssh-keygen -t rsa -b 4096 -f {key_file} -P ""'.format(key_file=key_file)
-    run(cmd)
-    auth_file = os.path.expanduser('~/.ssh/authorized_keys')
-    if not os.path.isfile(auth_file):
-        os.system('touch {auth_file}'.format(auth_file=auth_file))
-    cmd = 'cat {key_file}.pub >> {auth_file}'.format(key_file=key_file, auth_file=auth_file)
-    print(cmd)
-    run(cmd)
-
 def kill(user, hostname, pid, signal):
     cmd = 'ssh -o PasswordAuthentication=no {user}@{host} kill -s {signal} {pid}'.format(
            user=user, host=hostname, pid=pid, signal=signal)
