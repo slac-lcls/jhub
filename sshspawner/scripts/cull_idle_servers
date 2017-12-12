@@ -1,5 +1,4 @@
-
-#!/usr/bin/env python
+#!/reg/g/psdm/sw/conda/inst/miniconda2-prod-rhel7/envs/jhub/bin/python
 
 """script to monitor and cull idle single-user servers
 

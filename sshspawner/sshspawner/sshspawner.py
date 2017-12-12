@@ -2,7 +2,6 @@ import pwd
 import json
 import shlex
 import signal
-import shutil
 from jupyterhub.spawner import Spawner
 from jupyterhub.utils import random_port
 from traitlets import (Integer, Unicode)
@@ -14,7 +13,6 @@ class SSHSpawner(Spawner):
     pid = Integer(0)
     hostname = Unicode('')
     sudospawner_path = Unicode('/reg/g/psdm/sw/jupyterhub/psjhub/jhub/sshspawner/scripts/sudospawner')
-    #shutil.which('sudospawner'))
 
     def load_state(self, state):
         super(SSHSpawner, self).load_state(state)
