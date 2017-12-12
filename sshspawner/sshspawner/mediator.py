@@ -16,7 +16,7 @@ def run(cmd):
 
 
 def kill(user, hostname, pid, signal):
-    cmd = 'ssh -o PasswordAuthentication=no {user}@{host} kill -s {signal} {pid}'.format(
+    cmd = 'ssh -o PasswordAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {user}@{host} kill -s {signal} {pid}'.format(
            user=user, host=hostname, pid=pid, signal=signal)
     run(cmd)
 
@@ -26,7 +26,7 @@ def spawn(singleuser, user, args, env):
         env.pop('PYTHONPATH')
         log.app_log.info('PYTHONPATH env not allowed for security reasons')
     log_file = os.path.expanduser('~/.jhub.log')
-    cmd = ['ssh -o PasswordAuthentication=no {user}@psana '.format(user=user)]
+    cmd = ['ssh -o PasswordAuthentication=no -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no {user}@psana '.format(user=user)]
     cmd.extend(['export %s=%s;' %item for item in env.items()])
     cmd += ['hostname;', singleuser]
     cmd += args

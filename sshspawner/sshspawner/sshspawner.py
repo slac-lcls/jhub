@@ -61,7 +61,7 @@ class SSHSpawner(Spawner):
         Task(proc.stderr.read_until_close)
         ]
         raise Return((result.decode('utf8', 'replace'),
-                      error.decode('utf8', 'replace')))
+                      "\n".join([ x for x in error.decode('utf8', 'replace').splitlines() if 'list of known hosts' not in x ])))
 
     @coroutine
     def start(self):
@@ -70,7 +70,7 @@ class SSHSpawner(Spawner):
                                       args=self.get_args(), env=self.get_env())
         
         if error:
-            self.log.info('Error in spawning juptyterhub-singleuser\n', error)
+            self.log.info('Error in spawning juptyterhub-singleuser %s\n', error)
             if 'Permission denied' in error:
                 raise web.HTTPError(511) 
 
@@ -92,7 +92,7 @@ class SSHSpawner(Spawner):
                               pid=self.pid, signal=0)
         if error:
             self.log.info('Server died')
-            self.log.info(result, error)
+            self.log.info("Result=%s Error=%s", result, error)
             self.clear_state()
             return 0
         else:
