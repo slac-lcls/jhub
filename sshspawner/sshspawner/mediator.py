@@ -28,11 +28,11 @@ def spawn(singleuser, user, args, env):
         env.pop('PYTHONPATH')
         log.app_log.info('PYTHONPATH env not allowed for security reasons')
     log_file = os.path.expanduser('~/.jhub.log')
-    cmd = ['{ssh} {user}@psana "bash --noprofile --norc -c '.format(ssh=SSH_CMD, user=user)]
+    cmd = ['{ssh} {user}@psana \"bash --noprofile --norc -c \''.format(ssh=SSH_CMD, user=user)]
     cmd.extend(['export %s=%s;' %item for item in env.items()])
     cmd += ['hostname;', singleuser]
     cmd += args
-    cmd += [' > {log_file} 2>&1 & pid=$!; echo $pid"'.format(log_file=log_file)]
+    cmd += [' > {log_file} 2>&1 & pid=$!; echo $pid\'\"'.format(log_file=log_file)]
     cmd = ' '.join(cmd)
     run(cmd)
 
