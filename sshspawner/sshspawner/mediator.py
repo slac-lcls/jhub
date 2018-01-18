@@ -18,7 +18,7 @@ def run(cmd):
 
 
 def kill(user, hostname, pid, signal):
-    cmd = '{ssh} {user}@{host} "bash --noprofile --norc -c kill -s {signal} {pid}"'.format(
+    cmd = '{ssh} {user}@{host} \"bash --noprofile --norc -c \' kill -s {signal} {pid}\'\"'.format(
            ssh=SSH_CMD, user=user, host=hostname, pid=pid, signal=signal)
     run(cmd)
 
