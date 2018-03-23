@@ -82,7 +82,6 @@ class SSHSpawner(Spawner):
 
     @coroutine
     def poll(self):
-        self.log.info('Poll')
         if not self.pid:
             self.clear_state()
             return 0
